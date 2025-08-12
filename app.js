@@ -4,6 +4,8 @@ const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 3001;
 const { router: todoRoutes, todos } = require("./routes/todo.js");
+const todoDbRoutes = require("./routes/tododb.js");
+const db = require("./database/db");
 
 app.use(cors());
 app.use(express.json());
@@ -27,6 +29,15 @@ app.get("/contact", (req, res) => {
   res.render("contact");
 });
 
+app.get("/todo-view", (req, res) => {
+    db.query("SELECT * FROM todos", (err, todos) => {
+        if (err) return res.status(500).send("Internal Server Error");
+        res.render("todo", {
+            todos: todos,
+        });
+    });
+});
+  
 app.use((req, res) => {
   res.status(404).send("404 - Page Not Found");
 });
