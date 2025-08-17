@@ -6,7 +6,12 @@ const port = process.env.PORT || 3001;
 const { router: todoRoutes, todos } = require("./routes/todo.js");
 const todoDbRoutes = require("./routes/tododb.js");
 const db = require("./database/db");
+// const { useLayoutEffect } = require("react");
+app.set('layout', 'layouts/main-layout');
 
+
+const expressLayouts = require("express-ejs-layouts");
+app.use(expressLayouts);
 app.use(cors());
 app.use(express.json());
 app.set("view engine", "ejs");
@@ -18,16 +23,25 @@ app.get("/todos-data", (req, res) => {
 });
 
 app.get("/todos-list", (req, res) => {
-  res.render("todos-page", { todos: todos });
+  res.render("todos-page", { todos: todos, layout: "layouts/main-layout" });
 });
+    
+
+// ...existing code...
 
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("index", {
+    layout: "layouts/main-layout"
+  });
 });
 
 app.get("/contact", (req, res) => {
-  res.render("contact");
+  res.render("contact", {
+    layout: "layouts/main-layout"
+  });
 });
+
+// ...existing code...
 
 app.get("/todo-view", (req, res) => {
     db.query("SELECT * FROM todos", (err, todos) => {
